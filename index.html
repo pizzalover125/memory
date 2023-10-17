@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            background-color: #333;
+        }
+
+        .container {
+            margin: 20px auto;
+            width: 400px;
+            height: 400px;
+            display: grid;
+            grid-template-columns: 200px 200px;
+            justify-content: center;
+            align-items: center;
+            grid-column-gap: 20px;
+            grid-row-gap: 20px;
+        }
+
+        .box {
+            padding: 20px;
+            border-radius: 10px;
+            border: none;
+            height: 100%;
+        }
+
+        .box:active {
+            box-shadow: none;
+            transform: translateY(5px);
+        }
+
+        .red {
+            background-color: crimson;
+        }
+
+        .blue {
+            background-color: darkblue;
+        }
+
+        .green {
+            background-color: darkolivegreen;
+        }
+
+        .orange {
+            background-color: darkorange;
+        }
+
+        .light {
+            filter: brightness(150%);
+        }
+
+        #score,
+        #rb {
+            color: white;
+            text-align: center;
+            font-size: 4vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button class="red box" id="rb"></button>
+        <button class="blue box" id="bb"></button>
+        <button class="green box" id="gb"></button>
+        <button class="orange box" id="ob"></button>
+    </div>
+    <p id="score">Score: 0</p>
+    <script>
+        let score = 0;
+        let userPattern = [];
+        let gamePattern = [];
+        let level = 0;
+        let gameStarted = false;
+
+        const colors = ["R", "B", "G", "O"];
+
+        function createPattern() {
+            const randomColor = colors[Math.floor(Math.random() * 4)];
+            gamePattern.push(randomColor);
+        }
+
+        function playPattern() {
+            let i = 0;
+            const highlightInterval = setInterval(function () {
+                if (i < gamePattern.length) {
+                    highlight(gamePattern[i]);
+                    i++;
+                } else {
+                    clearInterval(highlightInterval);
+                }
+            }, 1000);
+        }
+
+        function highlight(color) {
+            const audio = new Audio('sound.mp3');
+            if (color === "R") {
+                $("#rb").addClass("light");
+                audio.play();
+                setTimeout(function () {
+                    $("#rb").removeClass("light");
+                }, 500);
+            } else if (color === "G") {
+                $("#gb").addClass("light");
+                audio.play();
+                setTimeout(function () {
+                    $("#gb").removeClass("light");
+                }, 500);
+            } else if (color === "O") {
+                $("#ob").addClass("light");
+                audio.play();
+                setTimeout(function () {
+                    $("#ob").removeClass("light");
+                }, 500);
+            } else if (color === "B") {
+                $("#bb").addClass("light");
+                audio.play();
+                setTimeout(function () {
+                    $("#bb").removeClass("light");
+                }, 500);
+            }
+        }
+
+        function checkPattern() {
+            for (let i = 0; i < userPattern.length; i++) {
+                if (userPattern[i] !== gamePattern[i]) {
+                    alert("Wrong pattern! Try again.");
+                    location.reload();
+                }
+            }
+
+            if (userPattern.length === gamePattern.length) {
+                score++;
+                $("#score").text("Score: " + score);
+                userPattern = [];
+                setTimeout(function () {
+                    playRound();
+                }, 1000);
+            }
+        }
+
+        function startGame() {
+            score = 0;
+            userPattern = [];
+            gamePattern = [];
+            level = 0;
+            gameStarted = false;
+            $("#score").text("Score: 0");
+        }
+
+        function playRound() {
+            createPattern();
+            level++;
+            $("#score").text("Score: " + score);
+            playPattern();
+        }
+
+        $("#rb").on("click", function () {
+            if (gameStarted) {
+                userPattern.push("R");
+                highlight("R");
+                checkPattern();
+            }
+        });
+
+        $("#gb").on("click", function () {
+            if (gameStarted) {
+                userPattern.push("G");
+                highlight("G");
+                checkPattern();
+            }
+        });
+
+        $("#bb").on("click", function () {
+            if (gameStarted) {
+                userPattern.push("B");
+                highlight("B");
+                checkPattern();
+            }
+        });
+
+        $("#ob").on("click", function () {
+            if (gameStarted) {
+                userPattern.push("O");
+                highlight("O");
+                checkPattern();
+            }
+        });
+
+        $("#rb").text("Start");
+        $("#rb").on("click", function () {
+            if (!gameStarted) {
+                startGame();
+                $("#rb").text("");
+                gameStarted = true;
+                setTimeout(playRound, 100);
+            }
+        });
+
+    </script>
+</body>
+
+</html>
