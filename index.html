@@ -13,7 +13,7 @@
         }
 
         html {
-            background-color: #333;
+            background-color: #111;
         }
 
         .container {
@@ -49,26 +49,25 @@
         }
 
         .red {
-            background-color: crimson;
+            background-color: firebrick;
         }
 
         .blue {
-            background-color: darkblue;
+            background-color: royalblue;
         }
 
         .green {
-            background-color: darkolivegreen;
+            background-color: mediumseagreen;
         }
 
         .orange {
-            background-color: darkorange;
+            background-color: orange;
         }
 
         .light {
             filter: brightness(150%);
         }
 
-        #score,
         #rb {
             color: white;
             text-align: center;
@@ -85,7 +84,6 @@
         <button class="green box" id="gb"></button>
         <button class="orange box" id="ob"></button>
     </div>
-    <p id="score">Score: 0</p>
     <script>
         let score = 0;
         let userPattern = [];
@@ -113,7 +111,7 @@
         }
 
         function highlight(color) {
-            const audio = new Audio('sound.mp3');
+            const audio = new Audio('ding.mp3');
             if (color === "R") {
                 $("#rb").addClass("light");
                 audio.play();
@@ -171,7 +169,7 @@
         function playRound() {
             createPattern();
             level++;
-            $("#score").text("Score: " + score);
+            $("#rb").text(`Score: ${score}`);
             playPattern();
         }
 
